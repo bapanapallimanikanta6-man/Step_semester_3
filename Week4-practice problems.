@@ -1,0 +1,214 @@
+
+
+
+## L1. Two Sum
+
+### Program
+#include <stdio.h>
+
+void twoSum(int nums[], int n, int target) {
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (nums[i] + nums[j] == target) {
+                printf("[%d, %d]\n", i, j);
+                return;
+            }
+        }
+    }
+}
+
+int main() {
+    int nums[] = {2, 7, 11, 15};
+    int target = 9;
+    int n = sizeof(nums) / sizeof(nums[0]);
+
+    twoSum(nums, n, target);
+
+    return 0;
+}
+
+### Output
+
+[0, 1]
+
+
+
+# L2. Best Time to Buy and Sell Stock
+### Program
+
+#include <stdio.h>
+
+int maxProfit(int prices[], int n) {
+    int minPrice = prices[0];
+    int maxProfit = 0;
+
+    for (int i = 1; i < n; i++) {
+        if (prices[i] < minPrice) {
+            minPrice = prices[i];
+        }
+
+        int profit = prices[i] - minPrice;
+
+        if (profit > maxProfit) {
+            maxProfit = profit;
+        }
+    }
+
+    return maxProfit;
+}
+
+int main() {
+    int prices[] = {7, 1, 5, 3, 6, 4};
+    int n = sizeof(prices) / sizeof(prices[0]);
+
+    printf("Maximum Profit = %d\n", maxProfit(prices, n));
+
+    return 0;
+}
+
+### Output
+Maximum Profit = 5
+
+
+
+
+# L3. Contains Duplicate
+
+### Program
+#include <stdio.h>
+#include <stdbool.h>
+
+bool containsDuplicate(int nums[], int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (nums[i] == nums[j]) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+int main() {
+    int nums[] = {1, 2, 3, 1};
+    int n = sizeof(nums) / sizeof(nums[0]);
+
+    if (containsDuplicate(nums, n)) {
+        printf("true\n");
+    } else {
+        printf("false\n");
+    }
+
+    return 0;
+}
+
+### Output
+true
+
+
+
+
+# L4. Merge Two Sorted Arrays
+
+### Program
+#include <stdio.h>
+void mergeSortedArrays(int arr1[], int n1, int arr2[], int n2) {
+    int result[n1 + n2];
+
+    int i = 0;
+    int j = 0;
+    int k = 0;
+
+    while (i < n1 && j < n2) {
+        if (arr1[i] < arr2[j]) {
+            result[k] = arr1[i];
+            i++;
+        } else {
+            result[k] = arr2[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        result[k] = arr1[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        result[k] = arr2[j];
+        j++;
+        k++;
+    }
+
+    printf("Merged Array: ");
+
+    for (int x = 0; x < n1 + n2; x++) {
+        printf("%d ", result[x]);
+    }
+
+    printf("\n");
+}
+
+int main() {
+    int arr1[] = {1, 3, 5};
+    int arr2[] = {2, 4, 6};
+
+    int n1 = sizeof(arr1) / sizeof(arr1[0]);
+    int n2 = sizeof(arr2) / sizeof(arr2[0]);
+
+    mergeSortedArrays(arr1, n1, arr2, n2);
+
+    return 0;
+}
+
+### Output
+Merged Array: 1 2 3 4 5 6
+
+
+
+
+# L5. Rotate Array
+
+### Program
+#include <stdio.h>
+
+void rotateArray(int nums[], int n, int k) {
+    k = k % n;
+
+    int newArray[n];
+
+    for (int i = 0; i < n; i++) {
+        newArray[(i + k) % n] = nums[i];
+    }
+
+    for (int i = 0; i < n; i++) {
+        nums[i] = newArray[i];
+    }
+}
+
+int main() {
+    int nums[] = {1, 2, 3, 4, 5, 6, 7};
+    int k = 3;
+
+    int n = sizeof(nums) / sizeof(nums[0]);
+
+    rotateArray(nums, n, k);
+
+    printf("Rotated Array: ");
+
+    for (int i = 0; i < n; i++) {
+        printf("%d ", nums[i]);
+    }
+
+    printf("\n");
+
+    return 0;
+}
+
+### Output
+Rotated Array: 5 6 7 1 2 3 4
+
+
