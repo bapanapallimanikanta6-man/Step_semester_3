@@ -1,0 +1,163 @@
+1.exam hall seat duplicate checker:
+public class SeatChecker {
+
+    static void checkDuplicateSeats(int[] seats) {
+        boolean found = false;
+
+        for (int i = 0; i < seats.length; i++) {
+            for (int j = i + 1; j < seats.length; j++) {
+
+                if (seats[i] == seats[j]) {
+                    System.out.println("Duplicate Seat Number: " + seats[i]);
+                    found = true;
+                }
+            }
+        }
+
+        if (!found)
+            System.out.println("No Duplicate Seats Found");
+    }
+
+    public static void main(String[] args) {
+        int[] seats = {101, 102, 103, 102, 105};
+
+        checkDuplicateSeats(seats);
+    }
+}
+
+
+2.typing speed:
+public class TypingAccuracy {
+
+    static void checkTypingAccuracy(String original, String typed) {
+        int matched = 0;
+        int firstMismatch = -1;
+
+        for (int i = 0; i < original.length(); i++) {
+
+            if (original.charAt(i) == typed.charAt(i))
+                matched++;
+            else if (firstMismatch == -1)
+                firstMismatch = i + 1;
+        }
+
+        double accuracy = matched * 100.0 / original.length();
+
+        System.out.printf("Matched: %d/%d | Accuracy: %.2f%%%n",
+                matched, original.length(), accuracy);
+
+        if (firstMismatch == -1)
+            System.out.println("No Mismatches");
+        else
+            System.out.println("First Mismatch at position: " + firstMismatch);
+    }
+
+    public static void main(String[] args) {
+        checkTypingAccuracy("hello world", "hello worlt");
+    }
+}
+3.traffic signal:
+public class TrafficStreak {
+
+    static void findLongestStreak(String signalLog) {
+        int count = 1;
+        int max = 1;
+        char color = signalLog.charAt(0);
+
+        for (int i = 1; i < signalLog.length(); i++) {
+
+            if (signalLog.charAt(i) == signalLog.charAt(i - 1))
+                count++;
+            else
+                count = 1;
+
+            if (count > max) {
+                max = count;
+                color = signalLog.charAt(i);
+            }
+        }
+
+        System.out.println("Longest Streak: '" +
+                color + "' repeated " + max + " times");
+    }
+
+    public static void main(String[] args) {
+        findLongestStreak("RRGGGYRR");
+    }
+}
+4.warahouse inventory:
+public class InventoryBalancer {
+
+    static void analyzeInventory(int[] a, int[] b) {
+        int totalA = 0;
+        int totalB = 0;
+        int max = a[0];
+        String section = "A";
+        int index = 0;
+
+        for (int i = 0; i < a.length; i++) {
+            totalA += a[i];
+            totalB += b[i];
+
+            if (a[i] > max) {
+                max = a[i];
+                section = "A";
+                index = i;
+            }
+
+            if (b[i] > max) {
+                max = b[i];
+                section = "B";
+                index = i;
+            }
+        }
+
+        String status = totalA == totalB ? "Balanced" : "Not Balanced";
+
+        System.out.println("Section A Total: " + totalA);
+        System.out.println("Section B Total: " + totalB);
+        System.out.println("Status: " + status);
+        System.out.println("Highest Quantity: " + max +
+                " (Section " + section + ", Item " + (index + 1) + ")");
+    }
+
+    public static void main(String[] args) {
+        int[] a = {20, 15, 30};
+        int[] b = {25, 10, 30};
+
+        analyzeInventory(a, b);
+    }
+}
+5.movie review and word length:
+public class WordLengthProfiler {
+
+    static void classifyWordLengths(String review) {
+        int shortWords = 0;
+        int mediumWords = 0;
+        int longWords = 0;
+
+        String[] words = review.split(" ");
+
+        for (String word : words) {
+
+            int length = word.length();
+
+            if (length <= 4)
+                shortWords++;
+            else if (length <= 8)
+                mediumWords++;
+            else
+                longWords++;
+        }
+
+        System.out.println("Short: " + shortWords);
+        System.out.println("Medium: " + mediumWords);
+        System.out.println("Long: " + longWords);
+    }
+
+    public static void main(String[] args) {
+        String review = "This movie was absolutely fantastic and thrilling";
+
+        classifyWordLengths(review);
+    }
+}
