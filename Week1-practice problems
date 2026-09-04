@@ -1,0 +1,142 @@
+1.rock paper scissor:
+import java.util.*;
+
+public class RockPaperScissors {
+
+    static String playRound(String p, String c) {
+        if (p.equals(c)) return "Draw";
+
+        if ((p.equals("Rock") && c.equals("Scissors")) ||
+            (p.equals("Paper") && c.equals("Rock")) ||
+            (p.equals("Scissors") && c.equals("Paper")))
+            return "Player Wins";
+
+        return "Computer Wins";
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String[] moves = {"Rock", "Paper", "Scissors"};
+
+        for (int i = 1; i <= 5; i++) {
+            System.out.print("Enter move: ");
+            String player = sc.next();
+
+            String computer = moves[new Random().nextInt(3)];
+
+            System.out.println("Computer: " + computer);
+            System.out.println("Result: " + playRound(player, computer));
+        }
+    }
+}
+
+2.palindrome:
+import java.util.*;
+
+public class Palindrome {
+
+    static boolean iterative(String s) {
+        return s.equals(new StringBuilder(s).reverse().toString());
+    }
+
+    static boolean recursive(String s) {
+        if (s.length() <= 1) return true;
+        if (s.charAt(0) != s.charAt(s.length()-1)) return false;
+        return recursive(s.substring(1, s.length()-1));
+    }
+
+    static boolean arrayReverse(String s) {
+        char[] a = s.toCharArray();
+        String r = new StringBuilder(new String(a)).reverse().toString();
+        return s.equals(r);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter text: ");
+        String s = sc.nextLine();
+
+        System.out.println("Iterative: " + iterative(s));
+        System.out.println("Recursive: " + recursive(s));
+        System.out.println("Array: " + arrayReverse(s));
+    }
+}
+
+3.calculator:
+import java.util.*;
+
+public class BmiCalculator {
+
+    static String getStatus(double bmi) {
+        if (bmi < 18.5) return "Underweight";
+        if (bmi < 25) return "Normal";
+        if (bmi < 30) return "Overweight";
+        return "Obese";
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Height: ");
+        double height = sc.nextDouble();
+
+        System.out.print("Weight: ");
+        double weight = sc.nextDouble();
+
+        double bmi = weight / (height * height);
+
+        System.out.println("BMI: " + bmi);
+        System.out.println("Status: " + getStatus(bmi));
+    }
+}
+
+4.first non repeating character:
+import java.util.*;
+
+public class FirstNonRepeating {
+
+    static char findFirst(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+
+            if (s.indexOf(ch) == s.lastIndexOf(ch))
+                return ch;
+        }
+        return '\0';
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter text: ");
+        String s = sc.nextLine();
+
+        char result = findFirst(s);
+
+        if (result == '\0')
+            System.out.println("No Non-Repeating Character");
+        else
+            System.out.println("First Non-Repeating: " + result);
+    }
+}
+
+5.reverse customer name:
+import java.util.*;
+
+public class ReverseName {
+
+    static String reverseCustomerName(String name) {
+        return new StringBuilder(name).reverse().toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter name: ");
+        String name = sc.nextLine();
+
+        System.out.println("Original: " + name);
+        System.out.println("Reversed: " + reverseCustomerName(name));
+    }
+}
