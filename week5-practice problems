@@ -1,0 +1,163 @@
+import java.util.Arrays;
+
+public class HackathonAssignment {
+
+    // 1. Hackathon Score Curve Booster
+    static void curveScores(int[] scores, int bonus) {
+        for (int i = 0; i < scores.length; i++)
+            scores[i] += bonus;
+    }
+
+    // 2. Duplicate Team Name Finder
+    static String findDuplicateTeam(String[] teamNames) {
+        for (int i = 0; i < teamNames.length; i++) {
+            for (int j = i + 1; j < teamNames.length; j++) {
+                if (teamNames[i].equals(teamNames[j]))
+                    return "Duplicate Found: " + teamNames[i];
+            }
+        }
+        return "No Duplicates Found";
+    }
+
+    // 3. Top-3 Podium Finder
+    static int[] findTopThreeScores(int[] scores) {
+        int first = Integer.MIN_VALUE;
+        int second = Integer.MIN_VALUE;
+        int third = Integer.MIN_VALUE;
+
+        for (int score : scores) {
+            if (score >= first) {
+                third = second;
+                second = first;
+                first = score;
+            } else if (score >= second) {
+                third = second;
+                second = score;
+            } else if (score > third) {
+                third = score;
+            }
+        }
+
+        return new int[]{first, second, third};
+    }
+
+    // 4. Hackathon Seating Grid Optimizer
+    static double rowAverage(int[] row) {
+        int sum = 0;
+
+        for (int score : row)
+            sum += score;
+
+        return (double) sum / row.length;
+    }
+
+    static String classifyRows(int[][] seatingScores, int threshold) {
+        String result = "";
+
+        for (int i = 0; i < seatingScores.length; i++) {
+            double avg = rowAverage(seatingScores[i]);
+
+            if (avg < threshold)
+                result += "Row " + i + ": Quiet Zone";
+            else
+                result += "Row " + i + ": Buzzing Zone";
+
+            if (i < seatingScores.length - 1)
+                result += " | ";
+        }
+
+        return result;
+    }
+
+    // 5. Placement Drive Shortlisting & Ranking Engine
+    static class Candidate implements Comparable<Candidate> {
+        String name;
+        double cgpa;
+        int codingScore;
+
+        Candidate(String name, double cgpa, int codingScore) {
+            this.name = name;
+            this.cgpa = cgpa;
+            this.codingScore = codingScore;
+        }
+
+        static boolean isEligible(double cgpa) {
+            return cgpa >= 7.5;
+        }
+
+        static boolean isEligible(double cgpa, int codingScore) {
+            return cgpa >= 6.5 && codingScore >= 60;
+        }
+
+        double compositeScore() {
+            return cgpa * 10 + codingScore;
+        }
+
+        public int compareTo(Candidate other) {
+            return Double.compare(other.compositeScore(),
+                                  this.compositeScore());
+        }
+    }
+
+    static String shortlistAndRank(Candidate[] candidates) {
+        Candidate[] temp = new Candidate[candidates.length];
+        int count = 0;
+
+        for (Candidate c : candidates) {
+            if (Candidate.isEligible(c.cgpa) ||
+                Candidate.isEligible(c.cgpa, c.codingScore)) {
+                temp[count++] = c;
+            }
+        }
+
+        Candidate[] shortlisted = Arrays.copyOf(temp, count);
+        Arrays.sort(shortlisted);
+
+        String result = "";
+
+        for (int i = 0; i < shortlisted.length; i++) {
+            result += (i + 1) + ". " +
+                    shortlisted[i].name + " (" +
+                    shortlisted[i].compositeScore() + ")";
+
+            if (i < shortlisted.length - 1)
+                result += " | ";
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+
+        // Problem 1
+        int[] scores = {70, 85, 60};
+        curveScores(scores, 10);
+        System.out.println(Arrays.toString(scores));
+
+        // Problem 2
+        String[] teams = {"ByteForce", "CodeCrafters", "ByteForce"};
+        System.out.println(findDuplicateTeam(teams));
+
+        // Problem 3
+        int[] marks = {45, 82, 79, 90, 33, 90, 61};
+        System.out.println(Arrays.toString(findTopThreeScores(marks)));
+
+        // Problem 4
+        int[][] seating = {
+            {40, 50, 45},
+            {85, 90, 95},
+            {30, 20, 25}
+        };
+        System.out.println(classifyRows(seating, 60));
+
+        // Problem 5
+        Candidate[] candidates = {
+            new Candidate("Aisha", 8.2, 40),
+            new Candidate("Rohit", 6.8, 65),
+            new Candidate("Meena", 6.0, 90),
+            new Candidate("Karan", 7.5, 20)
+        };
+
+        System.out.println(shortlistAndRank(candidates));
+    }
+}
