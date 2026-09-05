@@ -1,0 +1,119 @@
+import java.util.*;
+
+public class CategoryCAssignment {
+
+    // A1. Product of Array Except Self
+    static int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        int left = 1, right = 1;
+
+        for (int i = 0; i < n; i++) {
+            ans[i] = left;
+            left *= nums[i];
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+            ans[i] *= right;
+            right *= nums[i];
+        }
+        return ans;
+    }
+
+    // A2. Maximum Subarray
+    static int maxSubArray(int[] nums) {
+        int current = nums[0], max = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            current = Math.max(nums[i], current + nums[i]);
+            max = Math.max(max, current);
+        }
+        return max;
+    }
+
+    // A3. 3Sum
+    static int[][] threeSum(int[] nums) {
+        Arrays.sort(nums);
+        ArrayList<int[]> list = new ArrayList<>();
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            int l = i + 1, r = nums.length - 1;
+
+            while (l < r) {
+                int sum = nums[i] + nums[l] + nums[r];
+
+                if (sum == 0) {
+                    list.add(new int[]{nums[i], nums[l], nums[r]});
+                    while (l < r && nums[l] == nums[l + 1]) l++;
+                    while (l < r && nums[r] == nums[r - 1]) r--;
+                    l++;
+                    r--;
+                } else if (sum < 0)
+                    l++;
+                else
+                    r--;
+            }
+        }
+
+        return list.toArray(new int[list.size()][]);
+    }
+
+    // A4. Subarray Sum Equals K
+    static int subarraySum(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+
+        int sum = 0, count = 0;
+
+        for (int num : nums) {
+            sum += num;
+
+            if (map.containsKey(sum - k))
+                count += map.get(sum - k);
+
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+        return count;
+    }
+
+    // A5. Find Minimum in Rotated Sorted Array
+    static int findMin(int[] nums) {
+        int left = 0, right = nums.length - 1;
+
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+
+            if (nums[mid] > nums[right])
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        return nums[left];
+    }
+
+    public static void main(String[] args) {
+
+        // A1
+        System.out.println(Arrays.toString(
+            productExceptSelf(new int[]{1, 2, 3, 4})));
+
+        // A2
+        System.out.println(
+            maxSubArray(new int[]{-2, 1, -3, 4, -1, 2, 1, -5, 4}));
+
+        // A3
+        System.out.println(
+            Arrays.deepToString(
+                threeSum(new int[]{-1, 0, 1, 2, -1, -4})));
+
+        // A4
+        System.out.println(
+            subarraySum(new int[]{1, 1, 1}, 2));
+
+        // A5
+        System.out.println(
+            findMin(new int[]{3, 4, 5, 1, 2}));
+    }
+}
