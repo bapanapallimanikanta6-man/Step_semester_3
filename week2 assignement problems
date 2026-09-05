@@ -1,0 +1,116 @@
+import java.util.*;
+
+public class Week2Assignment {
+
+    // 1. ATM PIN Length Validator
+    static void checkPinLength(String pin) {
+        if (pin.length() != 4)
+            System.out.println("Invalid PIN — must be exactly 4 digits.");
+        else
+            System.out.println("PIN length OK.");
+    }
+
+    // 2. Word Reversal Encoder
+    static String reverseEachWord(String sentence) {
+        String[] words = sentence.split(" ");
+        StringBuilder result = new StringBuilder();
+
+        for (String word : words)
+            result.append(new StringBuilder(word).reverse()).append(" ");
+
+        return result.toString().trim();
+    }
+
+    // 3. Product Inventory CSV Parser
+    static void parseInventoryRecord(String csvLine) {
+        String[] fields = csvLine.split(",");
+
+        if (fields.length != 3)
+            System.out.println("Invalid Record");
+        else
+            System.out.println("Product: " + fields[0] +
+                    " | SKU: " + fields[1] +
+                    " | Qty: " + fields[2]);
+    }
+
+    // 4. Library ISBN Normalizer & Validator
+    static String normalizeCode(String raw) {
+        String code = raw.trim();
+        return code.substring(0, 3).toUpperCase() + code.substring(3);
+    }
+
+    static String validateAndFormat(String code) {
+        if (code.length() != 13)
+            return "Invalid: wrong length";
+
+        for (int i = 0; i < 3; i++)
+            if (!Character.isLetter(code.charAt(i)))
+                return "Invalid: publisher code must be 3 letters";
+
+        for (int i = 3; i < 13; i++)
+            if (!Character.isDigit(code.charAt(i)))
+                return "Invalid: body must contain only digits";
+
+        StringBuilder result = new StringBuilder();
+        result.append("[")
+              .append(code.substring(0, 3))
+              .append("] YEAR: ")
+              .append(code.substring(3, 7))
+              .append(" | CATALOG: ")
+              .append(code.substring(7));
+
+        return result.toString();
+    }
+
+    // 5. Stop-Word-Filtered Word Frequency Report
+    static void printFilteredWordFrequency(String feedback) {
+        String[] stopWords = {"the", "was", "and", "a", "is", "of", "in"};
+
+        feedback = feedback.toLowerCase()
+                .replace(".", "")
+                .replace(",", "");
+
+        String[] words = feedback.split("\\s+");
+        HashMap<String, Integer> map = new HashMap<>();
+
+        for (String word : words) {
+            boolean stop = false;
+
+            for (String s : stopWords)
+                if (word.equals(s))
+                    stop = true;
+
+            if (!stop)
+                map.put(word, map.getOrDefault(word, 0) + 1);
+        }
+
+        List<Map.Entry<String, Integer>> list =
+                new ArrayList<>(map.entrySet());
+
+        list.sort((x, y) -> y.getValue() - x.getValue());
+
+        for (Map.Entry<String, Integer> e : list)
+            System.out.println(e.getKey() + ": " + e.getValue());
+    }
+
+    public static void main(String[] args) {
+
+        // 1
+        checkPinLength("4820");
+
+        // 2
+        System.out.println(reverseEachWord("hello club"));
+
+        // 3
+        parseInventoryRecord("Wireless Mouse,WM-2201,150");
+
+        // 4
+        String code = normalizeCode(" pen2026004251 ");
+        System.out.println(validateAndFormat(code));
+
+        // 5
+        printFilteredWordFrequency(
+            "The mentor was great, the session was great and clear."
+        );
+    }
+}
