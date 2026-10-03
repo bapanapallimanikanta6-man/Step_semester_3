@@ -1,0 +1,539 @@
+1.payment system and fee calcualtion
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+abstract class PaymentMethod {
+    protected double amount;
+
+    public PaymentMethod(double amount) {
+        this.amount = amount;
+    }
+
+    public abstract double calculateFinalAmount();
+    public abstract String getPaymentType();
+}
+
+class CardPayment extends PaymentMethod {
+    public CardPayment(double amount) {
+        super(amount);
+    }
+
+    @Override
+    public double calculateFinalAmount() {
+        return amount * 1.02;
+    }
+
+    @Override
+    public String getPaymentType() {
+        return "CARD";
+    }
+}
+
+class WalletPayment extends PaymentMethod {
+    public WalletPayment(double amount) {
+        super(amount);
+    }
+
+    @Override
+    public double calculateFinalAmount() {
+        return amount * 1.01;
+    }
+
+    @Override
+    public String getPaymentType() {
+        return "WALLET";
+    }
+}
+
+class BankTransferPayment extends PaymentMethod {
+    public BankTransferPayment(double amount) {
+        super(amount);
+    }
+
+    @Override
+    public double calculateFinalAmount() {
+        return amount;
+    }
+
+    @Override
+    public String getPaymentType() {
+        return "BANKTRANSFER";
+    }
+}
+
+public class PaymentSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+
+        int n = sc.nextInt();
+        List<PaymentMethod> transactions = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String type = sc.next().toUpperCase();
+            double amount = sc.nextDouble();
+
+            switch (type) {
+                case "CARD":
+                    transactions.add(new CardPayment(amount));
+                    break;
+                case "WALLET":
+                    transactions.add(new WalletPayment(amount));
+                    break;
+                case "BANKTRANSFER":
+                    transactions.add(new BankTransferPayment(amount));
+                    break;
+            }
+        }
+
+        double grandTotal = 0.0;
+        for (PaymentMethod tx : transactions) {
+            double finalAmt = tx.calculateFinalAmount();
+            grandTotal += finalAmt;
+            System.out.printf("%s: %.2f\n", tx.getPaymentType(), finalAmt);
+        }
+
+        System.out.printf("Total: %.2f\n", grandTotal);
+        sc.close();
+    }
+}
+
+2. library items:
+
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+abstract class LibraryItem {
+    protected String title;
+
+    public LibraryItem(String title) {
+        this.title = title;
+    }
+
+    public abstract int getBorrowDurationDays();
+
+    public String calculateDueDate(LocalDate currentDate) {
+        return currentDate.plusDays(getBorrowDurationDays()).toString();
+    }
+
+    public String getTitle() {
+        return title;
+    }
+}
+
+class BookItem extends LibraryItem {
+    public BookItem(String title) {
+        super(title);
+    }
+
+    @Override
+    public int getBorrowDurationDays() {
+        return 14;
+    }
+}
+
+class DVDItem extends LibraryItem {
+    public DVDItem(String title) {
+        super(title);
+    }
+
+    @Override
+    public int getBorrowDurationDays() {
+        return 7;
+    }
+}
+
+class MagazineItem extends LibraryItem {
+    public MagazineItem(String title) {
+        super(title);
+    }
+
+    @Override
+    public int getBorrowDurationDays() {
+        return 3;
+    }
+}
+
+public class LibraryDueDateCalculator {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+
+        int n = Integer.parseInt(sc.nextLine().trim());
+        LocalDate currentDate = LocalDate.of(2023, 10, 26);
+        List<LibraryItem> items = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String line = sc.nextLine().trim();
+            int firstSpace = line.indexOf(' ');
+            String type = line.substring(0, firstSpace).toUpperCase();
+            String title = line.substring(line.indexOf('"') + 1, line.lastIndexOf('"'));
+
+            switch (type) {
+                case "BOOK":
+                    items.add(new BookItem(title));
+                    break;
+                case "DVD":
+                    items.add(new DVDItem(title));
+                    break;
+                case "MAGAZINE":
+                    items.add(new MagazineItem(title));
+                    break;
+            }
+        }
+
+        for (LibraryItem item : items) {
+            System.out.println(item.getTitle() + ": " + item.calculateDueDate(currentDate));
+        }
+
+        sc.close();
+    }
+}
+
+3.delivery fee calculator:
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+abstract class DeliveryRequest {
+    public abstract double calculateFee();
+    public abstract String getDeliveryType();
+}
+
+class StandardDelivery extends DeliveryRequest {
+    private double weight;
+    private double distance;
+
+    public StandardDelivery(double weight, double distance) {
+        this.weight = weight;
+        this.distance = distance;
+    }
+
+    @Override
+    public double calculateFee() {
+        return 5.0 + (0.50 * weight) + (0.10 * distance);
+    }
+
+    @Override
+    public String getDeliveryType() {
+        return "STANDARD";
+    }
+}
+
+class ExpressDelivery extends DeliveryRequest {
+    private double weight;
+    private double distance;
+
+    public ExpressDelivery(double weight, double distance) {
+        this.weight = weight;
+        this.distance = distance;
+    }
+
+    @Override
+    public double calculateFee() {
+        return 15.0 + (1.00 * weight) + (0.20 * distance);
+    }
+
+    @Override
+    public String getDeliveryType() {
+        return "EXPRESS";
+    }
+}
+
+class InternationalDelivery extends DeliveryRequest {
+    private double weight;
+    private double distance;
+    private double customsFee;
+
+    public InternationalDelivery(double weight, double distance, double customsFee) {
+        this.weight = weight;
+        this.distance = distance;
+        this.customsFee = customsFee;
+    }
+
+    @Override
+    public double calculateFee() {
+        return 25.0 + (2.00 * weight) + (0.50 * distance) + customsFee;
+    }
+
+    @Override
+    public String getDeliveryType() {
+        return "INTERNATIONAL";
+    }
+}
+
+public class DeliveryFeeCalculator {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+
+        int n = sc.nextInt();
+        List<DeliveryRequest> deliveries = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String type = sc.next().toUpperCase();
+            double weight = sc.nextDouble();
+            double distance = sc.nextDouble();
+
+            if (type.equals("INTERNATIONAL")) {
+                double customs = sc.nextDouble();
+                deliveries.add(new InternationalDelivery(weight, distance, customs));
+            } else if (type.equals("STANDARD")) {
+                deliveries.add(new StandardDelivery(weight, distance));
+            } else if (type.equals("EXPRESS")) {
+                deliveries.add(new ExpressDelivery(weight, distance));
+            }
+        }
+
+        double grandTotal = 0.0;
+        for (DeliveryRequest req : deliveries) {
+            double fee = req.calculateFee();
+            grandTotal += fee;
+            System.out.printf("%s: %.2f\n", req.getDeliveryType(), fee);
+        }
+
+        System.out.printf("Total: %.2f\n", grandTotal);
+        sc.close();
+    }
+}
+
+4.examanation question grader:
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+abstract class Question {
+    protected String text;
+    protected String correctAnswer;
+    protected String studentAnswer;
+    protected double points;
+
+    public Question(String text, String correctAnswer, String studentAnswer, double points) {
+        this.text = text;
+        this.correctAnswer = correctAnswer;
+        this.studentAnswer = studentAnswer;
+        this.points = points;
+    }
+
+    public abstract double evaluateScore();
+    public abstract String getQuestionType();
+}
+
+class MCQQuestion extends Question {
+    public MCQQuestion(String text, String correctAnswer, String studentAnswer, double points) {
+        super(text, correctAnswer, studentAnswer, points);
+    }
+
+    @Override
+    public double evaluateScore() {
+        return studentAnswer.equalsIgnoreCase(correctAnswer) ? points : 0.0;
+    }
+
+    @Override
+    public String getQuestionType() {
+        return "MCQ";
+    }
+}
+
+class TFQuestion extends Question {
+    public TFQuestion(String text, String correctAnswer, String studentAnswer, double points) {
+        super(text, correctAnswer, studentAnswer, points);
+    }
+
+    @Override
+    public double evaluateScore() {
+        return studentAnswer.equalsIgnoreCase(correctAnswer) ? points : 0.0;
+    }
+
+    @Override
+    public String getQuestionType() {
+        return "TF";
+    }
+}
+
+class EssayQuestion extends Question {
+    public EssayQuestion(String text, String correctAnswer, String studentAnswer, double points) {
+        super(text, correctAnswer, studentAnswer, points);
+    }
+
+    @Override
+    public double evaluateScore() {
+        String[] keywords = correctAnswer.split(",");
+        String studentAnsLower = studentAnswer.toLowerCase();
+        int matched = 0;
+
+        for (String kw : keywords) {
+            if (studentAnsLower.contains(kw.trim().toLowerCase())) {
+                matched++;
+            }
+        }
+
+        if (matched >= 2) return 0.75 * points;
+        if (matched == 1) return 0.50 * points;
+        return 0.0;
+    }
+
+    @Override
+    public String getQuestionType() {
+        return "ESSAY";
+    }
+}
+
+public class ExaminationGrader {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+
+        int n = Integer.parseInt(sc.nextLine().trim());
+        List<Question> questions = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String line = sc.nextLine().trim();
+            List<String> tokens = new ArrayList<>();
+            Matcher matcher = Pattern.compile("\"([^\"]*)\"|(\\S+)").matcher(line);
+
+            while (matcher.find()) {
+                if (matcher.group(1) != null) tokens.add(matcher.group(1));
+                else tokens.add(matcher.group(2));
+            }
+
+            String type = tokens.get(0).toUpperCase();
+            String text = tokens.get(1);
+            String correct = tokens.get(2);
+            String student = tokens.get(3);
+            double points = Double.parseDouble(tokens.get(4));
+
+            switch (type) {
+                case "MCQ":
+                    questions.add(new MCQQuestion(text, correct, student, points));
+                    break;
+                case "TF":
+                    questions.add(new TFQuestion(text, correct, student, points));
+                    break;
+                case "ESSAY":
+                    questions.add(new EssayQuestion(text, correct, student, points));
+                    break;
+            }
+        }
+
+        double overallScore = 0.0;
+        for (Question q : questions) {
+            double score = q.evaluateScore();
+            overallScore += score;
+            System.out.printf("%s: %.2f\n", q.getQuestionType(), score);
+        }
+
+        System.out.printf("Total Score: %.2f\n", overallScore);
+        sc.close();
+    }
+}
+
+5.public transport fee calculator:
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+abstract class Journey {
+    protected double distance;
+
+    public Journey(double distance) {
+        this.distance = distance;
+    }
+
+    public abstract double calculateFare();
+    public abstract String getTransportType();
+}
+
+class BusJourney extends Journey {
+    public BusJourney(double distance) {
+        super(distance);
+    }
+
+    @Override
+    public double calculateFare() {
+        return Math.min(10.0, 2.0 + (0.10 * distance));
+    }
+
+    @Override
+    public String getTransportType() {
+        return "BUS";
+    }
+}
+
+class TrainJourney extends Journey {
+    public TrainJourney(double distance) {
+        super(distance);
+    }
+
+    @Override
+    public double calculateFare() {
+        return 3.0 + (0.15 * distance);
+    }
+
+    @Override
+    public String getTransportType() {
+        return "TRAIN";
+    }
+}
+
+class MetroJourney extends Journey {
+    private double peakHourFactor;
+
+    public MetroJourney(double distance, double peakHourFactor) {
+        super(distance);
+        this.peakHourFactor = peakHourFactor;
+    }
+
+    @Override
+    public double calculateFare() {
+        return (1.50 + (0.20 * distance)) * peakHourFactor;
+    }
+
+    @Override
+    public String getTransportType() {
+        return "METRO";
+    }
+}
+
+public class TransportFareCalculator {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+
+        int n = sc.nextInt();
+        List<Journey> journeys = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String type = sc.next().toUpperCase();
+            double distance = sc.nextDouble();
+
+            if (type.equals("METRO")) {
+                double peakFactor = sc.nextDouble();
+                journeys.add(new MetroJourney(distance, peakFactor));
+            } else if (type.equals("BUS")) {
+                journeys.add(new BusJourney(distance));
+            } else if (type.equals("TRAIN")) {
+                journeys.add(new TrainJourney(distance));
+            }
+        }
+
+        double grandTotal = 0.0;
+        for (Journey j : journeys) {
+            double fare = j.calculateFare();
+            grandTotal += fare;
+            System.out.printf("%s: %.2f\n", j.getTransportType(), fare);
+        }
+
+        System.out.printf("Total: %.2f\n", grandTotal);
+        sc.close();
+    }
+}
+
