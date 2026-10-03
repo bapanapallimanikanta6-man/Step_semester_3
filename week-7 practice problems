@@ -1,0 +1,113 @@
+
+// Problem 1: Piggy Bank
+class PiggyBank {
+    private int savings;
+    final String id;
+
+    PiggyBank(String id) {
+        this.id = id;
+        savings = 0;
+    }
+
+    void deposit(int amount) {
+        savings += amount;
+    }
+
+    void withdraw(int amount) {
+        if (amount <= savings)
+            savings -= amount;
+        else
+            System.out.println("Rejected");
+    }
+
+    int getSavings() {
+        return savings;
+    }
+}
+
+// Problem 2: Quiz Scorecard
+class Scorecard {
+    private final boolean[] results;
+    private int count = 0;
+
+    Scorecard(int n) {
+        results = new boolean[n];
+    }
+
+    void recordAnswer(boolean correct) {
+        if (count < results.length) {
+            results[count] = correct;
+            count++;
+        }
+    }
+
+    int getScore() {
+        int score = 0;
+        for (int i = 0; i < count; i++) {
+            if (results[i])
+                score++;
+        }
+        return score;
+    }
+}
+
+// Problem 3: Nickname Tag
+class NameTag {
+    private final String firstName;
+    private final String lastName;
+
+    NameTag(String fullName) {
+        String[] parts = fullName.split(" ");
+        firstName = parts[0];
+        lastName = parts[1];
+    }
+
+    String getNickname() {
+        return firstName + " " + lastName.charAt(0) + ".";
+    }
+}
+
+// Problem 4: Locker Code
+class Locker {
+    private String code;
+    final int lockerNumber;
+
+    Locker(int lockerNumber, String code) {
+        this.lockerNumber = lockerNumber;
+        this.code = code;
+    }
+
+    void changeCode(String oldCode, String newCode) {
+        if (code.equals(oldCode)) {
+            code = newCode;
+            System.out.println("Success");
+        } else {
+            System.out.println("Rejected");
+        }
+    }
+}
+
+// Main class to test all 4 programs
+public class Main {
+    public static void main(String[] args) {
+        PiggyBank pb = new PiggyBank("PB-1");
+        pb.deposit(100);
+        pb.withdraw(30);
+        pb.withdraw(500);
+        System.out.println("Savings: " + pb.getSavings());
+
+        Scorecard sc = new Scorecard(4);
+        sc.recordAnswer(true);
+        sc.recordAnswer(true);
+        sc.recordAnswer(false);
+        sc.recordAnswer(true);
+        System.out.println("Score: " + sc.getScore());
+
+        NameTag tag = new NameTag("Maria Gomez");
+        System.out.println("Nickname: " + tag.getNickname());
+
+        Locker l = new Locker(101, "1234");
+        l.changeCode("1234", "5678");
+        l.changeCode("0000", "9999");
+    }
+}
