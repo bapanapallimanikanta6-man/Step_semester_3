@@ -1,0 +1,194 @@
+1. the health bar:
+public class Character {
+    private final int maxHealth;
+    private int health;
+
+    public Character(int maxHealth) {
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
+    }
+
+    public void takeDamage(int amount) {
+        if (amount <= 0) return;
+        this.health = Math.max(0, this.health - amount);
+    }
+
+    public void heal(int amount) {
+        if (amount <= 0) return;
+        this.health = Math.min(this.maxHealth, this.health + amount);
+    }
+
+    public int getHealth() {
+        return this.health;
+    }
+
+    public int getMaxHealth() {
+        return this.maxHealth;
+    }
+
+    public static void main(String[] args) {
+        Character c = new Character(100);
+        
+        c.takeDamage(30);
+        System.out.println("c.takeDamage(30) -> health = " + c.getHealth());
+
+        c.heal(50);
+        System.out.println("c.heal(50) -> health = " + c.getHealth() + " (capped)");
+
+        c.takeDamage(150);
+        System.out.println("c.takeDamage(150) -> health = " + c.getHealth() + " (floored)");
+    }
+}
+
+2.the playist:
+import java.util.Arrays;
+
+public class Playlist {
+    private final String[] songs;
+    private int songCount;
+
+    public Playlist(int capacity) {
+        this.songs = new String[capacity];
+        this.songCount = 0;
+    }
+
+    public void addSong(String song) {
+        if (songCount < songs.length) {
+            songs[songCount++] = song;
+        }
+    }
+
+    public String[] getSongs() {
+        return Arrays.copyOf(songs, songCount);
+    }
+
+    public int getSongCount() {
+        return songCount;
+    }
+
+    public static void main(String[] args) {
+        Playlist p = new Playlist(10);
+        p.addSong("Song A");
+        p.addSong("Song B");
+
+        String[] copy = p.getSongs();
+        copy[0] = "Hacked";
+
+        System.out.println("Returned copy[0]: " + copy[0]);
+        System.out.println("p.getSongs()[0] is still: " + p.getSongs()[0]);
+        System.out.println("Song count: " + p.getSongCount());
+    }
+}
+3. the password checker:
+public class PasswordChecker {
+    private final String password;
+
+    public PasswordChecker(String password) {
+        this.password = (password != null) ? password : "";
+    }
+
+    public String getStrength() {
+        int length = password.length();
+        if (length < 6) {
+            return "Weak";
+        } else if (length <= 9) {
+            return "Medium";
+        } else {
+            return "Strong";
+        }
+    }
+
+    public static void main(String[] args) {
+        PasswordChecker pc = new PasswordChecker("abcd");
+        System.out.println("pc.getStrength() -> " + pc.getStrength());
+
+        PasswordChecker pc2 = new PasswordChecker("abcdefghij");
+        System.out.println("pc2.getStrength() -> " + pc2.getStrength());
+    }
+}
+
+4. The traffic light:
+public class TrafficLight {
+    private final String id;
+    private String currentColor;
+
+    public TrafficLight(String id) {
+        this.id = id;
+        this.currentColor = "RED";
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getColor() {
+        return currentColor;
+    }
+
+    public String next() {
+        switch (currentColor) {
+            case "RED":
+                currentColor = "GREEN";
+                break;
+            case "GREEN":
+                currentColor = "YELLOW";
+                break;
+            case "YELLOW":
+                currentColor = "RED";
+                break;
+        }
+        return currentColor;
+    }
+
+    public static void main(String[] args) {
+        TrafficLight t = new TrafficLight("TL-9");
+        System.out.println("t.getColor() -> " + t.getColor());
+        System.out.println("t.next() -> " + t.next());
+        System.out.println("t.next() -> " + t.next());
+        System.out.println("t.next() -> " + t.next());
+    }
+}
+5. Thr shopping cart:
+public class Cart {
+    private final String cartId;
+    private final double[] itemPrices;
+    private int itemCount;
+
+    public Cart(String cartId, int capacity) {
+        this.cartId = cartId;
+        this.itemPrices = new double[capacity];
+        this.itemCount = 0;
+    }
+
+    public String getCartId() {
+        return cartId;
+    }
+
+    public void addItem(double price) {
+        if (itemCount < itemPrices.length) {
+            itemPrices[itemCount++] = price;
+        }
+    }
+
+    public double getTotal() {
+        double total = 0.0;
+        for (int i = 0; i < itemCount; i++) {
+            total += itemPrices[i];
+        }
+        return total;
+    }
+
+    public int getItemCount() {
+        return itemCount;
+    }
+
+    public static void main(String[] args) {
+        Cart cart = new Cart("CART-5", 20);
+        cart.addItem(250);
+        cart.addItem(99);
+        cart.addItem(151);
+
+        System.out.println("cart.getTotal() -> " + (int) cart.getTotal());
+        System.out.println("cart.getItemCount() -> " + cart.getItemCount());
+    }
+}
