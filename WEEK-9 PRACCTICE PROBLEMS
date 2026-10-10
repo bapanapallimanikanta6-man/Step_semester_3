@@ -1,0 +1,421 @@
+WEEK-9 PRACTICE PROBLEMS:
+
+
+1.GARDEN AREA PLOT REPORT:
+
+
+import java.util.Scanner;
+
+abstract class Plot {
+    String owner;
+    String shapeName;
+    
+    public Plot(String owner, String shapeName) {
+        this.owner = owner;
+        this.shapeName = shapeName;
+    }
+    
+    public abstract double calculateArea();
+    
+    public String getOwner() { return owner; }
+    public String getShapeName() { return shapeName; }
+}
+
+class CirclePlot extends Plot {
+    double radius;
+    public CirclePlot(String owner, double radius) {
+        super(owner, "CIRCLE");
+        this.radius = radius;
+    }
+    @Override
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+}
+
+class RectanglePlot extends Plot {
+    double length, width;
+    public RectanglePlot(String owner, double length, double width) {
+        super(owner, "RECTANGLE");
+        this.length = length;
+        this.width = width;
+    }
+    @Override
+    public double calculateArea() {
+        return length * width;
+    }
+}
+
+class TrianglePlot extends Plot {
+    double base, height;
+    public TrianglePlot(String owner, double base, double height) {
+        super(owner, "TRIANGLE");
+        this.base = base;
+        this.height = height;
+    }
+    @Override
+    public double calculateArea() {
+        return 0.5 * base * height;
+    }
+}
+
+public class GardenPlotAreaReport {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        if (!scanner.hasNextInt()) return;
+        int n = scanner.nextInt();
+        Plot[] plots = new Plot[n];
+        double totalArea = 0;
+
+        for (int i = 0; i < n; i++) {
+            String shape = scanner.next();
+            String owner = scanner.next();
+            if (shape.equals("CIRCLE")) {
+                plots[i] = new CirclePlot(owner, scanner.nextDouble());
+            } else if (shape.equals("RECTANGLE")) {
+                plots[i] = new RectanglePlot(owner, scanner.nextDouble(), scanner.nextDouble());
+            } else if (shape.equals("TRIANGLE")) {
+                plots[i] = new TrianglePlot(owner, scanner.nextDouble(), scanner.nextDouble());
+            }
+        }
+
+        for (Plot p : plots) {
+            double area = p.calculateArea();
+            totalArea += area;
+            System.out.printf("%s (%s): %.2f\n", p.getOwner(), p.getShapeName(), area);
+        }
+        System.out.printf("Total Area: %.2f\n", totalArea);
+        scanner.close();
+    }
+}
+
+2.WEEKLY STAFF PAY:
+
+
+import java.util.Scanner;
+
+abstract class Staff {
+    String name;
+    public Staff(String name) {
+        this.name = name;
+    }
+    public abstract double calculatePay();
+    public String getName() { return name; }
+}
+
+class FullTimeStaff extends Staff {
+    double weeklySalary;
+    public FullTimeStaff(String name, double weeklySalary) {
+        super(name);
+        this.weeklySalary = weeklySalary;
+    }
+    @Override
+    public double calculatePay() {
+        return weeklySalary;
+    }
+}
+
+class HourlyStaff extends Staff {
+    double hours, rate;
+    public HourlyStaff(String name, double hours, double rate) {
+        super(name);
+        this.hours = hours;
+        this.rate = rate;
+    }
+    @Override
+    public double calculatePay() {
+        if (hours <= 40) {
+            return hours * rate;
+        } else {
+            return (40 * rate) + ((hours - 40) * rate * 1.5);
+        }
+    }
+}
+
+class InternStaff extends Staff {
+    double stipend;
+    public InternStaff(String name, double stipend) {
+        super(name);
+        this.stipend = stipend;
+    }
+    @Override
+    public double calculatePay() {
+        return stipend;
+    }
+}
+
+public class WeeklyStaffPay {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        if (!scanner.hasNextInt()) return;
+        int n = scanner.nextInt();
+        Staff[] staffList = new Staff[n];
+        double totalPayroll = 0;
+
+        for (int i = 0; i < n; i++) {
+            String type = scanner.next();
+            String name = scanner.next();
+            if (type.equals("FULLTIME")) {
+                staffList[i] = new FullTimeStaff(name, scanner.nextDouble());
+            } else if (type.equals("HOURLY")) {
+                staffList[i] = new HourlyStaff(name, scanner.nextDouble(), scanner.nextDouble());
+            } else if (type.equals("INTERN")) {
+                staffList[i] = new InternStaff(name, scanner.nextDouble());
+            }
+        }
+
+        for (Staff s : staffList) {
+            double pay = s.calculatePay();
+            totalPayroll += pay;
+            System.out.printf("%s: %.2f\n", s.getName(), pay);
+        }
+        System.out.printf("Total Payroll: %.2f\n", totalPayroll);
+        scanner.close();
+    }
+}
+
+3.LIBRARY LATE FINE COUNTER:
+
+
+import java.util.Scanner;
+
+abstract class LibraryItem {
+    String title;
+    int daysLate;
+    public LibraryItem(String title, int daysLate) {
+        this.title = title;
+        this.daysLate = daysLate;
+    }
+    public abstract double calculateFine();
+    public String getTitle() { return title; }
+}
+
+class BookItem extends LibraryItem {
+    public BookItem(String title, int daysLate) { super(title, daysLate); }
+    @Override
+    public double calculateFine() { return daysLate * 2.0; }
+}
+
+class DVDItem extends LibraryItem {
+    public DVDItem(String title, int daysLate) { super(title, daysLate); }
+    @Override
+    public double calculateFine() {
+        double fine = daysLate * 5.0;
+        return fine > 50.0 ? 50.0 : fine;
+    }
+}
+
+class MagazineItem extends LibraryItem {
+    public MagazineItem(String title, int daysLate) { super(title, daysLate); }
+    @Override
+    public double calculateFine() { return daysLate * 1.0; }
+}
+
+public class LibraryLateFineCounter {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        if (!scanner.hasNextInt()) return;
+        int n = scanner.nextInt();
+        LibraryItem[] items = new LibraryItem[n];
+        double totalFines = 0;
+
+        for (int i = 0; i < n; i++) {
+            String type = scanner.next();
+            String title = scanner.next();
+            int days = scanner.nextInt();
+            if (type.equals("BOOK")) items[i] = new BookItem(title, days);
+            else if (type.equals("DVD")) items[i] = new DVDItem(title, days);
+            else if (type.equals("MAGAZINE")) items[i] = new MagazineItem(title, days);
+        }
+
+        for (LibraryItem item : items) {
+            double fine = item.calculateFine();
+            totalFines += fine;
+            System.out.printf("%s: %.2f\n", item.getTitle(), fine);
+        }
+        System.out.printf("Total Fines: %.2f\n", totalFines);
+        scanner.close();
+    }
+}
+
+4. ELECTRICITY CONNECTING BILL:
+
+
+import java.util.Scanner;
+
+abstract class Connection {
+    double units;
+    String typeName;
+    public Connection(String typeName, double units) {
+        this.typeName = typeName;
+        this.units = units;
+    }
+    public abstract double calculateBill();
+    public String getTypeName() { return typeName; }
+}
+
+class HomeConnection extends Connection {
+    public HomeConnection(double units) { super("HOME", units); }
+    @Override
+    public double calculateBill() {
+        return units <= 100 ? units * 5.0 : (100 * 5.0) + ((units - 100) * 7.0);
+    }
+}
+
+class ShopConnection extends Connection {
+    public ShopConnection(double units) { super("SHOP", units); }
+    @Override
+    public double calculateBill() { return (units * 8.0) + 100.0; }
+}
+
+class FactoryConnection extends Connection {
+    public FactoryConnection(double units) { super("FACTORY", units); }
+    @Override
+    public double calculateBill() {
+        double bill = units * 6.0;
+        return bill < 1000.0 ? 1000.0 : bill;
+    }
+}
+
+public class ElectricityConnectionBilling {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        if (!scanner.hasNextInt()) return;
+        int n = scanner.nextInt();
+        Connection[] connections = new Connection[n];
+        double total = 0;
+
+        for (int i = 0; i < n; i++) {
+            String type = scanner.next();
+            double units = scanner.nextDouble();
+            if (type.equals("HOME")) connections[i] = new HomeConnection(units);
+            else if (type.equals("SHOP")) connections[i] = new ShopConnection(units);
+            else if (type.equals("FACTORY")) connections[i] = new FactoryConnection(units);
+        }
+
+        for (Connection c : connections) {
+            double bill = c.calculateBill();
+            total += bill;
+            System.out.printf("%s: %.2f\n", c.getTypeName(), bill);
+        }
+        System.out.printf("Total: %.2f\n", total);
+        scanner.close();
+    }
+}
+5.TRAVEL BOOKING WITH A COMMON FEE:
+
+import java.util.Scanner;
+
+abstract class Connection {
+    double units;
+    String typeName;
+    public Connection(String typeName, double units) {
+        this.typeName = typeName;
+        this.units = units;
+    }
+    public abstract double calculateBill();
+    public String getTypeName() { return typeName; }
+}
+
+class HomeConnection extends Connection {
+    public HomeConnection(double units) { super("HOME", units); }
+    @Override
+    public double calculateBill() {
+        return units <= 100 ? units * 5.0 : (100 * 5.0) + ((units - 100) * 7.0);
+    }
+}
+
+class ShopConnection extends Connection {
+    public ShopConnection(double units) { super("SHOP", units); }
+    @Override
+    public double calculateBill() { return (units * 8.0) + 100.0; }
+}
+
+class FactoryConnection extends Connection {
+    public FactoryConnection(double units) { super("FACTORY", units); }
+    @Override
+    public double calculateBill() {
+        double bill = units * 6.0;
+        return bill < 1000.0 ? 1000.0 : bill;
+    }
+}
+
+public class ElectricityConnectionBilling {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        if (!scanner.hasNextInt()) return;
+        int n = scanner.nextInt();
+        Connection[] connections = new Connection[n];
+        double total = 0;
+
+        for (int i = 0; i < n; i++) {
+            String type = scanner.next();
+            double units = scanner.nextDouble();
+            if (type.equals("HOME")) connections[i] = new HomeConnection(units);
+            else if (type.equals("SHOP")) connections[i] = new ShopConnection(units);
+            else if (type.equals("FACTORY")) connections[i] = new FactoryConnection(units);
+        }
+
+        for (Connection c : connections) {
+            double bill = c.calculateBill();
+            total += bill;
+            System.out.printf("%s: %.2f\n", c.getTypeName(), bill);
+        }
+        System.out.printf("Total: %.2f\n", total);
+        scanner.close();
+    }
+}
+
+
+Part B — Quiz
+Q1. C. Hiding how an object performs its operations and showing only what it does
+Q2. C. It cannot be instantiated directly
+Q3. B. The class must be declared abstract, or the code will not compile
+Q4. C. private
+Q5. C. public, static, and final
+Q6. C. Any number of interfaces
+Q7. D. public
+Q8. C. Interfaces carry no instance state, avoiding the 'diamond problem' ambiguity with conflicting data inheritance
+Q9. D. A compile-time error occurs until the class overrides the method
+Q10. B. Abstract classes can have constructors that run when a subclass object is created
+
+Part C 
+Question 1
+Explain abstraction in your own words. Provide a real-life example, 
+different from those mentioned in the material, detailing what is 
+shown to the user and what details are hidden. Abstraction is the
+object-oriented principle of exposing only essential features and 
+behaviors while hiding complex internal implementation details. 
+For example, consider an automated washing machine: the user sees
+and interacts with simple buttons like "Start," "Delicate," and "Spin,"
+which represent the exposed interface. The internal mechanisms—such as water intake valves, heating element cycles, and motor 
+rotation speeds—are completely hidden from the user.
+
+Question 2:
+Describe the primary difference between abstraction and encapsulation. Explain how these two concepts work together within a single class to manage complexity
+and data protection. Abstraction focuses on what an object does by hiding operational complexity behind a simplified interface, whereas encapsulation focuses on 
+how data is protected by bundling fields and methods together and restricting direct external access using access modifiers like private. Together, a class can 
+use encapsulation to safeguard its internal state variables (e.g., balance or password) and abstraction to provide clean public methods (e.g., withdraw()) that 
+manage those variables securely without exposing vulnerable implementation details.
+
+Question 3
+
+An abstract class cannot be instantiated, yet it can define a constructor. Explain why an abstract class might have a constructor and describe when this 
+constructor is executed. An abstract class can have a constructor to initialize common fields and state shared among all its subclasses, preventing code
+duplication. Even though you cannot create an instance of the abstract class using new, its constructor is automatically executed via super() whenever a 
+concrete subclass object is instantiated.
+
+Question 4
+Explain why an abstract method cannot be declared with the private, static, or final modifiers. Provide a reason for each of these restrictions.
+private: Abstract methods must be implemented by subclasses, but private methods are invisible outside their defining class and cannot be overridden.
+static: Static methods belong to the class rather than instances and are resolved at compile-time, whereas abstract methods rely on runtime dynamic method dispatch (polymorphism) in subclasses.
+final: Final methods cannot be overridden by subclasses, which directly contradicts the requirement that abstract methods must be implemented/overridden by subclasses.
+
+Question 5
+What is the 'diamond problem' in the context of inheritance? Explain how Java's design, allowing a class to implement multiple interfaces but extend only one
+class, avoids this problem. The 'diamond problem' occurs in multiple inheritance when a class inherits from two parent classes that both implement the same
+method or store conflicting instance variables, creating ambiguity about which version to inherit. Java avoids this by restricting classes to single class 
+inheritance (extends), eliminating state-based ambiguity. While Java allows multiple interface implementation (implements), interfaces cannot contain mutable 
+instance state (fields are public static final), and conflicting default methods force the developer to explicitly override and resolve them.
+
+
