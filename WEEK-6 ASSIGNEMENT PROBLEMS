@@ -1,0 +1,173 @@
+WEEK-6 ASSIGNMENT  PROBLEMS:
+
+
+1.LIBRARY INVENTATORY MANAGEMENT:
+class BookInventory {
+    String title;
+    String author;
+    int copiesAvailable;
+
+    public BookInventory(String title, String author, int copiesAvailable) {
+        this.title = title;
+        this.author = author;
+        this.copiesAvailable = copiesAvailable;
+    }
+
+    public void printEntry() {
+        System.out.println(title + " by " + author + " - " + copiesAvailable + " copies available");
+    }
+}
+
+public class LibraryInventoryTest {
+    public static void main(String[] args) {
+        BookInventory[] books = {
+            new BookInventory("Clean Code", "Robert C. Martin", 3),
+            new BookInventory("Effective Java", "Joshua Bloch", 5),
+            new BookInventory("Refactoring", "Martin Fowler", 0),
+            new BookInventory("Design Patterns", "GoF", 2)
+        };
+
+        for (BookInventory book : books) {
+            book.printEntry();
+        }
+    }
+}
+
+2.SALARY MANAGEMENT:
+class PayrollAccount {
+    private double basicSalary;
+    private double bonus;
+
+    public PayrollAccount(double initialSalary) {
+        if (initialSalary < 0) {
+            System.out.println("Warning: Negative salary given. Starting at 0.");
+            this.basicSalary = 0;
+        } else {
+            this.basicSalary = initialSalary;
+        }
+        this.bonus = 0;
+    }
+
+    public void creditBonus(double amount) {
+        if (amount <= 0) {
+            System.out.println("Rejected: Bonus amount must be greater than 0.");
+        } else {
+            this.bonus += amount;
+            System.out.println("Bonus credited: Rs " + amount);
+        }
+    }
+
+    public void deductTax(double percent) {
+        if (percent < 0 || percent > 100) {
+            System.out.println("Rejected: Tax percentage must be between 0 and 100.");
+        } else {
+            double deduction = basicSalary * (percent / 100.0);
+            basicSalary -= deduction;
+            System.out.println("Tax deducted: " + (int)percent + "%");
+        }
+    }
+
+    public double getNetSalary() {
+        return basicSalary + bonus;
+    }
+}
+
+public class PayrollTest {
+    public static void main(String[] args) {
+        PayrollAccount account = new PayrollAccount(50000);
+        account.creditBonus(5000);
+        account.deductTax(10);
+        System.out.println("Net salary: Rs " + account.getNetSalary());
+    }
+}
+
+3.EMPLOYEE PROFILE CREATION:
+class EmployeeProfile {
+    String empId;
+    String empName;
+    double salary;
+    boolean isIntern;
+
+    public EmployeeProfile(String empId, String empName, double salary) {
+        this.empId = empId;
+        this.empName = empName;
+        this.salary = salary;
+        this.isIntern = false;
+    }
+
+    public EmployeeProfile(String empId, String empName) {
+        this(empId, empName, 0.0);
+        this.isIntern = true;
+    }
+
+    public void printProfile() {
+        System.out.println(empId + " | " + empName + " | Rs " + salary + " | Intern: " + isIntern);
+    }
+}
+
+public class EmployeeProfileTest {
+    public static void main(String[] args) {
+        EmployeeProfile e1 = new EmployeeProfile("E-101", "Divya", 65000);
+        EmployeeProfile e2 = new EmployeeProfile("E-102", "Arjun");
+
+        e1.printProfile();
+        e2.printProfile();
+    }
+}
+
+
+4.EXAM HALL TICKET PREFERENCE MANGEMENT:
+
+class HallTicket {
+    String studentName;
+    int seatNumber;
+
+    public HallTicket(String studentName, int seatNumber) {
+        this.studentName = studentName;
+        this.seatNumber = seatNumber;
+    }
+}
+
+public class HallTicketTest {
+    public static void main(String[] args) {
+        HallTicket priya = new HallTicket("Priya", 0);
+        HallTicket copy = priya;
+        copy.seatNumber = 45;
+        HallTicket separate = new HallTicket("Priya", 45);
+
+        System.out.println("Priya's seatNumber (via first variable):\n" + priya.seatNumber);
+        System.out.println("copy == priya: " + (copy == priya));
+        System.out.println("separate == priya: " + (separate == priya));
+    }
+}
+
+5.EMPLOYEE COMPANY AND REFERENCE MANAGEMENT:
+
+class CompanyEmployee {
+    String empName;
+    double salary;
+    static String companyName = "Bright Horizon Technologies";
+    static int employeeCount = 0;
+
+    public CompanyEmployee(String empName, double salary) {
+        this.empName = empName;
+        this.salary = salary;
+        employeeCount++;
+    }
+
+    public static void printCompanyInfo() {
+        System.out.println(companyName);
+        System.out.println("Employees on record: " + employeeCount);
+    }
+}
+
+public class CompanyEmployeeTest {
+    public static void main(String[] args) {
+        CompanyEmployee e1 = new CompanyEmployee("Alice", 50000);
+        CompanyEmployee e2 = new CompanyEmployee("Bob", 60000);
+        CompanyEmployee e3 = new CompanyEmployee("Charlie", 55000);
+
+        CompanyEmployee.printCompanyInfo();
+    }
+}
+
